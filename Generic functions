@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 int makeSame(void *pointer1, void *pointer2);
 
 void func(int (*makeSame)(void *, void *), void (*print)(void *), void *value1, void* value2);
@@ -20,52 +20,52 @@ typedef struct numbers {
 } numbers;
 
 int main() {
-    symbols *symbolData = malloc(sizeof(symbols));
-    numbers *data = malloc(sizeof(numbers));
+    symbols *symbolData = malloc(sizeof(symbols)); // Allocate memory to a symbols pointer var
+    numbers *data = malloc(sizeof(numbers)); // Allocate memory to a numbers pointer var
     data->number1 = 7;
     data->number2 = 29;
     symbolData->symbol1 = "a\0";
     symbolData->symbol2 = "z\0";
 
-    printIfInt(&data->number1);
+    printIfInt(&data->number1); // Printing the numbers first
     printIfInt(&data->number2);
-    func(makeSame, printIfInt, &data->number1, &data->number2);
+    func(makeSame, printIfInt, &data->number1, &data->number2); // Calling func
 
-    printIfChar(symbolData->symbol1);
+    printIfChar(symbolData->symbol1); // Printing the chars (strings) first
     printIfChar(symbolData->symbol2);
-    func(makeSame, printIfChar, (void *) &symbolData->symbol1, (void *) &symbolData->symbol2);
+    func(makeSame, printIfChar, (void *) &symbolData->symbol1, (void *) &symbolData->symbol2); // Calling func
 
-    free(data);
+    free(data); // Freeing the memory allocated
     free(symbolData);
     return 0;
 }
 
 int makeSame(void *pointer1, void *pointer2) {
-    int *ptr1 = pointer1;
+    int *ptr1 = pointer1; // Declare 2 pointers of size int (treat chars as ascii values)
     int *ptr2 = pointer2;
     if (*ptr1 == *ptr2) {
-        return *ptr1;
+        return *ptr1; // Stop condition if the values are equal
     } else {
         if (*ptr1 > *ptr2) {
-            (*ptr1)--;
+            (*ptr1)--; // If 1 is bigger than 2, decrease 1 and continue with the recursive chain
             return makeSame(ptr1, ptr2);
         } else {
-            (*ptr2)--;
+            (*ptr2)--; // If 2 is bigger than 1, decrease 1 and continue with the recursive chain
             return makeSame(ptr1, ptr2);
         }
     }
 }
 
 void func(int (*makeSame)(void *, void *), void (*print)(void *), void *value1, void* value2) {
-    makeSame(value1, value2);
-    print(value1);
+    makeSame(value1, value2); // Calling makeSame generic function to compare and equalize 2 values
+    print(value1); // Printing the values
     print(value2);
 }
 
 void printIfChar(void *str) {
-    printf("%s\n", (char *) str);
+    printf("%s\n", (char *) str); // Print the char received
 }
 
 void printIfInt(void *number) {
-    printf("%d\n", *(int *) number);
+    printf("%d\n", *(int *) number); // Print the number received
 }
