@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int makeSame(void *pointer1, void *pointer2);
+
+void func(int (*makeSame)(void *, void *), void (*print)(void *), void *value1, void* value2);
+
+void printIfChar(void *str);
+
+void printIfInt(void *number);
+
+typedef struct symbols {
+    char* symbol1;
+    char* symbol2;
+} symbols;
+
+typedef struct numbers {
+    int number1;
+    int number2;
+} numbers;
+
+int main() {
+    symbols *symbolData = malloc(sizeof(symbols));
+    numbers *data = malloc(sizeof(numbers));
+    data->number1 = 7;
+    data->number2 = 29;
+    symbolData->symbol1 = "a\0";
+    symbolData->symbol2 = "z\0";
+
+    printIfInt(&data->number1);
+    printIfInt(&data->number2);
+    func(makeSame, printIfInt, &data->number1, &data->number2);
+
+    printIfChar(symbolData->symbol1);
+    printIfChar(symbolData->symbol2);
+    func(makeSame, printIfChar, (void *) &symbolData->symbol1, (void *) &symbolData->symbol2);
+
+    free(data);
+    free(symbolData);
+    return 0;
+}
+
+int makeSame(void *pointer1, void *pointer2) {
+    int *ptr1 = pointer1;
+    int *ptr2 = pointer2;
+    if (*ptr1 == *ptr2) {
+        return *ptr1;
+    } else {
+        if (*ptr1 > *ptr2) {
+            (*ptr1)--;
+            return makeSame(ptr1, ptr2);
+        } else {
+            (*ptr2)--;
+            return makeSame(ptr1, ptr2);
+        }
+    }
+}
+
+void func(int (*makeSame)(void *, void *), void (*print)(void *), void *value1, void* value2) {
+    makeSame(value1, value2);
+    print(value1);
+    print(value2);
+}
+
+void printIfChar(void *str) {
+    printf("%s\n", (char *) str);
+}
+
+void printIfInt(void *number) {
+    printf("%d\n", *(int *) number);
+}
