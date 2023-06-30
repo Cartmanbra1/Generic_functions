@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define SMALL_VALUE (-2)
+#define BIG_VALUE 2
+
+void *arrayMax(void *array, size_t elementSize, size_t elementCount, int (*compare)(const void *, const void *));
+
+int symCompare(const void *value1, const void *value2);
+
+int numCompare(const void *value1, const void *value2);
+
+int stringCompare(const void* value1, const void* value2);
+
+char* makeString ();
+
+int main() {
+    int arr[10] = {0, 1, 0, 3, 4, 5, 6, 7, 8, 9};
+    char symArr[10] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'g', 'f'};
+    char** stringArr;
+    stringArr = malloc(sizeof(char*) * 10);
+    for (int i = 0; i < 10; i++){
+        char* newString = makeString();
+        stringArr[i] = newString;
+        printf("%s\n", stringArr[i]);
+    }
+
+    int *maxNumber = arrayMax(arr, sizeof(arr), 10, numCompare);
+    printf("%d\n", *maxNumber);
+
+    char *maxChar = arrayMax(symArr, sizeof(symArr), sizeof(symArr), symCompare);
+    printf("%c\n", *maxChar);
+
+    maxChar = arrayMax(stringArr, sizeof(char *), 10, stringCompare);
+    printf("%s\n", maxChar);
+
+}
+
+
+void *arrayMax(void *array, size_t elementSize, size_t elementCount, int (*compare)(const void *, const void *)) {
+    int result;
+    void *keepValue = malloc(sizeof(size_t));
+    for (int i = 0; i < elementCount - 1; i++) {
+        result = compare(&array[i], &array[i + 1]);
+        if (result == -1) {
+            strcpy(keepValue, &array[i + 1]);
+        } else if (result == 1) {
+            strcpy(keepValue, &array[i]);
+        } else if (result == SMALL_VALUE) {
+            keepValue = &array[i + 1];
+        } else if (result == BIG_VALUE) {
+            keepValue = &array[i];
+        } else {
+            continue;
+        }
+    }
+    return keepValue;
+}
+
+
+int numCompare(const void *value1, const void *value2) {
+    if ((int*) value1 < (int*) value2) {
+        return SMALL_VALUE;
+    } else if ( (int*) value1 > (int*) value2) {
+        return BIG_VALUE;
+    } else {
+        return 0;
+    }
+}
+
+
+
+int symCompare(const void *value1, const void *value2) {
+    if (strcmp(value1, value2) < 0) {
+        return -1;
+    } else if (strcmp(value1, value2) > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int stringCompare(const void* value1, const void* value2){
+    if (strlen(value1) < strlen(value2)){
+        return -1;
+    } else if (strlen(value1) > strlen(value2)){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+char* makeString (){
+    printf("Enter a string:\n");
+    char character;
+    char* newString = (char *) malloc(sizeof(char *));
+    scanf("%c", &character);
+    int length = 0;
+    int count = 1;
+    while (character != '\n'){
+        newString[length++] = character;
+        if (length >= sizeof(char) * count){
+            newString = realloc(newString, sizeof(char) * (++count) + 1);
+        }
+        scanf("%c", &character);
+    }
+    newString[length] = '\0';
+    return newString;
+}
