@@ -1,0 +1,35 @@
+int numCompare(int val1, int val2);
+
+int* intMax(int* array, size_t elementCount);
+
+int main() {
+    int arr[10] = {0, 1, 0, 3, 4, 5, 6, 7, 8, 5};
+    int* value;
+    value = intMax(arr, 10);
+    printf("%d\n", *value);
+}
+
+int* intMax(int* array, size_t elementCount){
+    int* keepValue, result;
+    for (int i = 0; i < elementCount - 1; i++){
+        result = numCompare(array[i], array[i + 1]);
+        if (result == 1){
+            keepValue = &array[i];
+        } else if (result == -1){
+            keepValue = &array[i + 1];
+        } else {
+            continue;
+        }
+    }
+    return keepValue;
+}
+
+int numCompare(int val1, int val2){
+    if (val1 > val2){
+        return 1;
+    } else if (val2 > val1){
+        return -1;
+    } else {
+        return 0;
+    }
+}
