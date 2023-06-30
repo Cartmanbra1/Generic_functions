@@ -26,7 +26,7 @@ int main() {
         printf("%s\n", stringArr[i]);
     }
 
-    int *maxNumber = arrayMax(arr, sizeof(arr), 10, numCompare);
+    int *maxNumber = arrayMax(arr, sizeof(arr), sizeof(arr) / sizeof(int), numCompare);
     printf("%d\n", *maxNumber);
 
     char *maxChar = arrayMax(symArr, sizeof(symArr), sizeof(symArr), symCompare);
@@ -35,6 +35,10 @@ int main() {
     maxChar = arrayMax(stringArr, sizeof(char *), 10, stringCompare);
     printf("%s\n", maxChar);
 
+    for (int i = 0; i < 10; i++) {
+        free(stringArr[i];
+    }
+    free(stringArr);
 }
 
 
