@@ -1,0 +1,23 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+typedef enum {True, False} Boolean;
+
+Boolean composeWeights(int weights[], int weightsSize, int newWeight) {
+    if (newWeight == 0) {
+        return True;
+    }
+    if (weightsSize == 0) {
+        return False;
+    }
+    Boolean skip = composeWeights(weights + 1, weightsSize - 1, newWeight);
+    Boolean left = composeWeights(weights + 1, weightsSize - 1, newWeight - weights[0]);
+    Boolean right = composeWeights(weights + 1, weightsSize - 1, newWeight + weights[0]);
+    return (skip || left || right);
+}
+
+int main() {
+    int weights[] = {8,4,11};
+    int b = composeWeights(weights, 3, 12);
+    printf("%d", b);
+}
